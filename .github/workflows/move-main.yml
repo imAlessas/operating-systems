@@ -31,5 +31,5 @@ jobs:
             - name: Commit and push changes
               run: |
                 git add --all
-                git commit -m "Renamed src/main.pdf into sistemi-operativi.pdf"
+                git commit -m "renamed src/main.pdf into sistemi-operativi.pdf"
                 git push origin $base_branch
