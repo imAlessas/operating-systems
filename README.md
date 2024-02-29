@@ -16,13 +16,15 @@ Il documento presentato in questa repo ha alcune mancanze (in particolare nella 
 
 Se vuoi aiutare alla correzione degli errori o eventualmente ad aggiungere parti di documento mancanti, si consiglia fortemente di rispettare le seguenti linee guida.
 
-> [!TIP]
+> [!IMPORTANT]
 >
 > 1. Utilizza la funzione `fork` per clonare la repo sul tuo account GitHub
 >
 > 2. Crea un nuovo `branch` ed effettua le __modifiche__ e le aggiunte al progetto
 >
 > 3. Fai una `pull request` e attendi che le modifiche vengano revisionate
+
+Eventualmente, si possono utilizzare anche i GitHub `issues` per segnalare un errore banale.
 
 ## Contenuti trattati
 
