@@ -17,7 +17,7 @@ All'iterno di questa repository, oltre al file del riassunto, [`sistemi-operativ
 Il documento `.pdf` è suddiviso in diversi capitoli. In questa sezione cerchiamo di schematizzare il contenuto per apprendere gli argomenti principali che sono discussi all'interno di `sistemi-operativi.pdf`.
 
 <details>
-    <summary> <h4> Processi <h4> </summary>
+    <summary> <h4> Processi </h4> </summary>
     Il capitolo tratta dei processi, definendoli come istanze attive di programmi in esecuzione sulla CPU, con uno spazio dedicato in memoria e un blocco di controllo (PCB) che ne gestisce le informazioni. Esplora gli stati attraversati dai processi, come nuovo, pronto, in esecuzione, in attesa e terminato, con creazione e terminazione gestite dal genitore. Discute inoltre la comunicazione tra processi, sia tramite memoria condivisa, più veloce ma soggetta a errori di sincronizzazione, sia attraverso il passaggio di messaggi, più sicuro ma con maggiore overhead a causa del coinvolgimento del kernel.
 </details>
 
