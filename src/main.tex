@@ -1,0 +1,36 @@
+\documentclass[titlepage]{article}
+\input{utils/packages}
+\input{utils/C++ theme}
+
+\title{\textbf{\fontsize{35pt}{35pt}\selectfont Sistemi\\\vspace{25pt}Operativi}}
+\author{Alessandro Trigolo}
+\date{\today}
+
+\begin{document}
+
+
+\maketitle
+
+\newpage\tableofcontents
+
+\newpage\listoffigures
+
+\newpage\lstlistoflistings
+
+\listoftodos
+
+
+\lstset{style = C++}
+
+
+\include{chapters/Gestione dei Processi}
+
+\include{chapters/Sincronizzazione dei Processi}
+
+\include{chapters/Gestione della Memoria}
+
+\include{chapters/Gestione dello storage}
+
+\include{chapters/File system}
+
+\end{document}
