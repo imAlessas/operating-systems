@@ -1,4 +1,3 @@
-\pagebreak
 \section{Sincronizzazione}\label{sincronizzazione}
 Come abbiamo visto nel capitolo \ref{processes},i processi possono essere eseguiti sia in parallelo che in concorrenza, la quale non è altro che un modo per far apparentemente girare due processo in maniera parallela quando in realtà stanno condividendo lo stesso \textit{core} del sistema. Un processo può quindi essere interrotto in qualunque momento da un algoritmo di scheduling (come il \textit{Round Robin}) per fare spazio ad un altro processo. Cosa succede però se viene interrotto in un momento in cui sta accedendo nella memoria condivisa con un altro processo e, lasciando spazio all'altro, vengono modificati dei dati? Capiremo, in questa sezione, che l'obiettivo da raggiungere è quindi la \textbf{cooperazione} tra processi in modo tale che non si verifichino situazioni spiacevoli.
 
