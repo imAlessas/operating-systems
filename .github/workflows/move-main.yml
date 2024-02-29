@@ -20,7 +20,7 @@ jobs:
               run: |
                 if [ -f src/main.pdf ]; then
                 mv src/main.pdf sistemi-operativi.pdf
-                fi
+                
 
             - name: Set up Git
               run: |
@@ -33,3 +33,4 @@ jobs:
                 git add --all
                 git commit -m "renamed src/main.pdf into sistemi-operativi.pdf"
                 git push origin $base_branch
+                fi
