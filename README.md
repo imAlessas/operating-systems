@@ -26,6 +26,8 @@ Se vuoi aiutare alla correzione degli errori o eventualmente ad aggiungere parti
 
 Eventualmente, si possono utilizzare anche i GitHub `issues` per segnalare un errore banale.
 
+Si osserva infine che tutti i `commit` di questo progetto, nonostante sia scritto in lingua italiana, sono in inglese, come il nome dei files e delle cartelle. Si prega quindi di mantenere valido questo _invariante_ del progetto.
+
 ## Contenuti trattati
 
 Il documento `.pdf` è suddiviso in diversi capitoli. In questa sezione cerchiamo di schematizzare il contenuto per apprendere gli argomenti principali che sono discussi all'interno di `sistemi-operativi.pdf`.
