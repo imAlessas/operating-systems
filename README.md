@@ -89,7 +89,7 @@ Il documento `.pdf` è suddiviso in diversi capitoli. In questa sezione cerchiam
 
 ## Collaboratori
 
-* Alessandro Trigolo (GitHubu: [@imAlessas](https://github.com/imAlessas))
+* Alessandro Trigolo (GitHub: [@imAlessas](https://github.com/imAlessas))
 
 ---
 
