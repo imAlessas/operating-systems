@@ -1,8 +1,8 @@
 # Sistemi Operativi
 
-Questa repo contiene il riassunto del corso _Sistemi Operativi_, tenuto durante l'anno accademico 2022/2023 della facoltà di Ingegneria Informatica dell'Università degli Studi di Padova.
+Questa repo contiene il riassunto del corso _Sistemi Operativi_, tenuto dal docente N. Bellotto durante l'anno accademico 2022/2023 della facoltà di Ingegneria Informatica dell'Università degli Studi di Padova.
 
-All'iterno di questa repository, oltre al file del riassunto, [`sistemi-operativi.pdf`](sistemi-operativi.pdf), sono presenti tutti il file `.tex` e le immagini volti alla compilazione del documento.
+All'interno di questa repository, oltre al file del riassunto, [`sistemi-operativi.pdf`](sistemi-operativi.pdf), sono presenti tutti i file `.tex` e le immagini volti alla compilazione del documento.
 
 ## Indice
 
@@ -10,11 +10,11 @@ All'iterno di questa repository, oltre al file del riassunto, [`sistemi-operativ
 
 * [Contenuti trattati](#contenuti-trattati)
 
-## RIsoluzione dei problemi
+## Risoluzione dei problemi
 
-Il documento presentato in questa repo ha alcune mancanze (in particolare nella seconda parte del 3 capitolo); inoltre è possibile che siano presenti errori di battitura o di altro tipo.
+Il documento presentato in questa repo ha alcune mancanze (in particolare nella seconda parte del terzo capitolo); inoltre è possibile che siano presenti errori di battitura o di altro tipo.
 
-Se vuoi aiutare alla correzione degli errori o eventualmente ad aggiungere parti di documento mancanti, si consiglia fortemente di rispettare le seguenti linee guida.
+Se vuoi dare un contributo correggendo eventuali errori oppure aggiungere parti di documento mancanti, consiglio fortemente di rispettare le seguenti linee guida.
 
 > [!IMPORTANT]
 >
@@ -26,7 +26,7 @@ Se vuoi aiutare alla correzione degli errori o eventualmente ad aggiungere parti
 
 Eventualmente, si possono utilizzare anche i GitHub `issues` per segnalare un errore banale.
 
-Si osserva infine che tutti i `commit` di questo progetto, nonostante sia scritto in lingua italiana, sono in inglese, come il nome dei files e delle cartelle. Si prega quindi di mantenere valido questo _invariante_ del progetto.
+Si osserva infine che tutti i `commit` di questo progetto, nonostante sia scritto in lingua italiana, sono in inglese, come il nome dei files e delle cartelle. Si prega quindi di mantenere valido questo invariante.
 
 ## Contenuti trattati
 
