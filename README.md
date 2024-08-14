@@ -2,7 +2,7 @@
 
 Questa repo contiene il riassunto del corso _Sistemi Operativi_, tenuto dal docente N. Bellotto durante l'anno accademico 2022/2023 della facoltà di Ingegneria Informatica dell'Università degli Studi di Padova.
 
-All'interno di questa repository, oltre al file del riassunto, [`sistemi-operativi.pdf`](sistemi-operativi.pdf), sono presenti tutti i file `.tex` e le immagini volti alla compilazione del documento.
+All'interno di questa repository, oltre al file del riassunto, [`sistemi-operativi.pdf`](imalessas.github.io/operating-systems/), sono presenti tutti i file `.tex` e le immagini volti alla compilazione del documento.
 
 ## Indice
 
