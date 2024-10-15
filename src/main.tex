@@ -1,21 +1,28 @@
-\documentclass[titlepage]{article}
-\input{utils/packages}
-\input{utils/C++ theme}
+\documentclass{report}
 
-\title{\textbf{\fontsize{35pt}{35pt}\selectfont Sistemi\\\vspace{25pt}Operativi}}
-\author{\Large{\href{https://github.com/imAlessas}{Alessandro Trigolo}}}
-\date{\today}
+
+\input{latex-setup/dependencies}
+\input{latex-setup/config}
+
+\input{latex-setup/C++ theme}
+
+\input{template/title.tex}
+\input{template/ToC.tex}
 
 \begin{document}
 
+\input{template/frontispiece.tex}
 
-\maketitle
+% \newpage\tableofcontents
 
-\newpage\tableofcontents
+% \newpage\listoffigures
 
-\newpage\listoffigures
+% \newpage\lstlistoflistings
 
-\newpage\lstlistoflistings
+\pagenumbering{roman}
+\tableofcontents
+
+\pagenumbering{arabic}
 
 \lstset{style = C++}
 
@@ -23,7 +30,8 @@
 
 
 
-\newpage\part{Gestione dei Processi}
+
+% \newpage\part{Gestione dei Processi}
 
 \input{chapters/processes.tex}
 
@@ -35,7 +43,7 @@
 
 
 
-\newpage\part{Sincronizzazione dei Processi}
+% \newpage\part{Sincronizzazione dei Processi}
 
 \input{chapters/synchronization.tex}
 
@@ -45,7 +53,7 @@
 
 
 
-\newpage\part{Gestione della Memoria}
+% \newpage\part{Gestione della Memoria}
 
 \input{chapters/main memory.tex}
 
@@ -55,7 +63,7 @@
 
 
 
-\newpage\part{Gestione dello storage}
+% \newpage\part{Gestione dello storage}
 
 \input{chapters/mass storage.tex}
 
@@ -65,7 +73,7 @@
 
 
 
-\newpage\part{File system}
+% \newpage\part{File system}
 
 \input{chapters/file system interface.tex}
 
