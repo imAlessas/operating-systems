@@ -1,8 +1,8 @@
 \pagebreak
-\section{CPU Scheduling} \label{CPU scheduling}
+\chapter{CPU Scheduling} \label{CPU scheduling}
 In questa sezione ci occupiamo di tutti gli aspetti che concernono lo scheduling del processore, ovvero la pratica secondo la quale, attraverso dei precisi criteri, si sceglie quale processo all'interno della \textit{ready queue} verrà eseguito.
 
-\subsection{Nozioni fondamentali}
+\section{Nozioni fondamentali}
 Prima di iniziare a discutere di scheduling vero e proprio è necessario avere chiari alcuni concetti importanti.
 
 \paragraph{Burst.}
@@ -33,10 +33,10 @@ Ci sono due macro gruppi di scheduling: preemptive e non. Uno scheduling è dett
 \paragraph{Dispatcher.}
 Nel momento in cui lo scheduler ha scelto quale processo verrà eseguito, il dispatcher si occupa di cambiare il processo nella CPU. In particolare viene effettuato il \textit{context switch} (\ref{context_switch}), passa in \textit{user mode} e va alla giusta locazione del programma per iniziare la sua esecuzione. Durante tutto ciò la CPU però non lavora: è importante quindi minimizzare questa latenza e fare in modo che non se ne effettuino un numero troppo elevato al fine di mantenere un alta percentuale di utilizzo della CPU.
 % 
-\subsection{Algoritmi non preemptive}
+\section{Algoritmi non preemptive}
 In questo paragrafo ci occupiamo dei primi algoritmi non preemptive, ovvero gli algoritmi che non fermano i processi che sono in esecuzione. 
 
-\subsubsection{First-Come First-Served (FCFS)}
+\subsection{First-Come First-Served (FCFS)}
 Questo è l'algoritmo più banale da implementare: il primo processo che entra nella coda sarà anche il primo ad essere eseguito. Questo algoritmo ha un approccio praticamente identico al \textbf{FIFO} (\textit{First In First Out}). Attraverso un semplice esempio, possiamo osservare che questo algoritmo non è efficiente. Poniamo che entrino nella coda 3 processi: $P_1$, di durata 24 unità di tempo (in genere millisecondi) e $P_2$ e $P_3$ con durata di esecuzione 3.  
 \begin{figure}[h]
     \centering
@@ -57,7 +57,7 @@ Nel secondo caso invece la situazione migliora notevolmente in quanto $P_2$ aspe
 
 Diversi sono i problemi di questo algoritmo. Prima di tutto può generare il \textbf{convoy effect} (effetto convoglio): se viene eseguito un processo \textit{I/O bounded}, tutti gli altri processi in coda devono aspettare che questo si "sblocchi" generando quindi un rallentamento generale. In secondo luogo, questo algoritmo di scheduling dipende dall'ordine di entrata dei processi e di conseguenza \textbf{non} è nemmeno possibili analizzare in modo \textbf{deterministico} le prestazioni dell'algoritmo.
 % 
-\subsubsection{Shortest-Job-First (SJF)}\label{SJF}
+\subsection{Shortest-Job-First (SJF)}\label{SJF}
 Come abbiamo notato dalla figura \ref{fig:FCFS}, se i processi più bervi sono eseguiti prima, il tempo medio di attesa $\langle T \rangle$ si abbassa. Implementiamo quindi un algoritmo che dia la precedenza ai processi con il tempo di esecuzione più breve tra quelli che sono presenti in coda. In questo algoritmo stiamo assumendo che siamo a conoscenza del CPU burst time di ciascun processo: si osserva che stiamo facendo un'ipotesi, spesso questo dato non è a disposizione. Se tutti i CPU burst sono conosciuti, l'algoritmo fornisce il minor tempo medio di attesa di un insieme finito di processi.
 
 Il funzionamento di questo algoritmo è molto semplice: in base ai processi arrivati in coda, questi, prima di essere eseguiti, vengono riordinati in base al loro tempo di burst. Per esempio, poniamo di avere in coda un processo $P_1$ con un burst time di 6, $P_2$ da 8, $P_3$ da 7 e $P_4$ da 3.
@@ -74,7 +74,7 @@ Osservando la figura \ref{fig:SJF} notiamo che i processi sono stati riordinati 
 
 Anche in questo caso però se durante l'esecuzione è in coda un processo con un burst molto alto e entrano solo processi con un burst basso, è probabile che si verifichi una situazione di attesa perenne (chiamata \textbf{starvation}); vedremo, nel corso di questo capitolo, come ciò può essere evitato (\ref{priority scheduling}).
 % 
-\subsubsection{Stima del \textit{CPU burst time}}
+\subsection{Stima del \textit{CPU burst time}}
 Come abbiamo affermato poco fa, quasi mai il burst time è a disposizione. Si è quindi trovato un modo per stimare al meglio il burst time di un processo, in base ai processi che sono stati eseguiti in precedenza. Il metodo utilizzato è chiamato \textbf{exponential averaging} il quale, in essenza, dà peso maggiore ai processi eseguiti da poco tempo e, pian piano, più i processi sono remoti, meno influenza hanno sulla stima. Le variabili in gioco nella formula sono:
 \vspace{-5px}
 \begin{itemize}
@@ -100,11 +100,11 @@ Osserviamo ora la figura \ref{fig:CPU burst estimation} che rappresenta come vie
 La prima colonna composta dalla coppia $\binom{6}{10}$ è la colonna "base", la partenza del nostro grafico. Con questi due dati, si calcola la seconda colonna $\binom{4}{8}$, dove $ 8 = \frac{10 + 6}{2}$; a questo punto si può calcolare la terza colonna $\binom{6}{6}$, dove il secondo $6 = \frac{4 + 8}{2}$. Così facendo si è in grado di calcolare una buona stima per il CPU burst time del processo corrente.
 
 % 
-\subsection{Algoritmi preemptive}
+\section{Algoritmi preemptive}
 In questo secondo paragrafo discutiamo invece di due algoritmi preemptive, ovvero algoritmi che possono fermare l'esecuzione di un processo per favorirne un altro.
 
 % 
-\subsubsection{Shortest-Remaining-Time-First (SRTF)}
+\subsection{Shortest-Remaining-Time-First (SRTF)}
 Il primo algoritmo che andremo a discutere è la versione preemptive del SJF: in questo caso viene servito per primo il processo al quale manca minor tempo per essere completato. Quindi se si sta eseguendo un processo $P$ e arriva un processo $Q$ il quale burst time è minore rispetto al burst time che manca a $P$ per terminare, quest'ultimo viene fermato per dare la precedenza a $Q$. Una volta terminata l'esecuzione di $Q$, il processo $P$ riprede da dove era stato fermato in precedenza. Prendiamo in considerazione i seguenti 4 processi:
 \begin{table}[h]
     \centering
@@ -129,7 +129,7 @@ Al tempo zero arriva in coda il processo $P_1$, di durata 8. Al tempo 1 arriva i
 Osserviamo che con questo algoritmo può capitare che sia in esecuzione un processo con un tempo di burst molto elevato e che poi continuino ad arrivare dei processi con un tempo di burst ridotto. In questo caso, il processo con il tempo maggiore verrebbe sempre interrotto dagli altri processi e non riuscirebbe mai a terminare andando quindi in una situazione di \textbf{starvation}. Come vedremo, una soluzione è questo problema è fornita dallo scheduling con priorità (\ref{priority scheduling}).
 
 % 
-\subsubsection{Round Robin (RR)}\label{RR}
+\subsection{Round Robin (RR)}\label{RR}
 Passiamo ora ad un algoritmo un po' più sofisticato ed elegante: stiamo parlando del Round Robin. Alla base di questo algoritmo c'è il \textbf{quanto} di tempo (generalmente tra i 10 e i 100 millisecondi): ogni processo all'interno della coda, ha diritto ad essere eseguito per 1 quanto di tempo alla volta. Di conseguenza, ogni quanto di tempo viene effettuato un \textit{context switch} e si prosegue ad un altro processo nella coda: si continua così in maniera ciclica finché ciascun processo viene eseguito completamente lasciando spazio ai nuovi.
 
 Osserviamo che se $q \to\infty$ si ha un comportamento FIFO, molto simile all'algoritmo First-Come First-Served. Allo stesso tempo però $q$ deve comunque essere maggiore del tempo che ci si impiega per effettuare un context switch (ordine dei $\mu s$), altrimenti la CPU viene sprecata solo per fare i context switch al posto di effettivamente eseguire i processi. 
@@ -154,7 +154,7 @@ Consideriamo il caso in cui $q = 4$ e in coda sono presenti i tre processi utili
 \end{figure}
 Osserviamo che il RR, per il processo $P_1$, ogni $q = 4$, si ferma per fare spazio agli altri processi mentre, per i processi $P_2$ e $P_3$, che durano meno di un quanto, quando terminano il Round Robin, non aspetta la scadenza del quanto per eseguire un altro processo ma comincia subito, che è un comportamento ragionevolmente ovvio. 
 % 
-\subsubsection{Reattività}
+\subsection{Reattività}
 Cerchiamo ora di capire il vantaggio che forniscono gli algoritmi di scheduling preempitive (in particolare il RR) rispetto agli algoritmi non preemptive. Prendiamo come esempio i seguenti processi:
 \begin{table}[h]
     \centering
@@ -175,7 +175,7 @@ Cerchiamo ora di capire il vantaggio che forniscono gli algoritmi di scheduling 
 Osserviamo però che se avessimo utilizzato l'algoritmo SJF (vedi \ref{SJF}) il tournaround time medio è 8 che è minore rispetto a quello fornito da RR. Ciò significa che utilzzare un algoritmo pre-emptive, in termini di tempistiche, non è necessariamente la scelta migliore, è semplicemente un altro modo per schedulare l'esecuzione dei processi, ma non ne garantisce il miglioramento della prestazione. Allora perchè utilizzare questi algoritmo? Perchè migliora la reattività (\textbf{responsiveness}) del sistema. Ipotizziamo di avere un coda moltissimi processi che stanno in esecuzione. Un algoritmo non preempitve li esegue uno ad uno (secondo determinati criteri, più o meno efficienti) ma tutti i processi devono sempre stare in attesa che uno termini. Il RR invece garantisce che tutti i processi vengano eseguiti per almeno un certo quanto \textit{q} di tempo: è quindi un algoritmo più \textbf{equo} rispetto agli algoritmi non preemptive.
 
 % 
-\subsection{Scheduling con priorità} \label{priority scheduling}
+\section{Scheduling con priorità} \label{priority scheduling}
 Fino ad ora abbiamo trattato i processi in modo equo se non per la stima del \textit{burst time}. Introduciamo ora una seconda informazione, la \textbf{priorità} che non è altro che un numero che indica quanto sia importante (urgente) l'esecuzione di un determinato algoritmo. La priorità può essere sia legata al CPU burst time ma può anche essere legata ad altri aspetti. 
 
 Arriva però un problema: la \textbf{starvation}. Anche in questo caso, come nel SRTF, può capitare che i processi che hanno una priorità di grado molto basso non vengano mai eseguiti in quanto sono sempre presenti processi con una priorità più alta. Con l'introduzione della priorità però, se un processo è da troppo tempo in coda, si aumenta di un grado la priorità al fine da mandarlo in esecuzione. Questa tecnica rappresenta allegoricamente l'invecchiamento (\textbf{aging}) del processo nella coda di attesa. 
@@ -203,7 +203,7 @@ Vediamo ora un primo esempio di scheduling con priorità puro. Abbiamo a che far
 Notiamo infatti che i processi sono eseguiti in ordine in base alla loro priorità: $P_2, P_5, P_1, P_3$ e $P_4$. Ovviamente, se durante l'esecuzione di $P_1$ (che ha priorità 3) fosse arrivato in coda un algoritmo con priorità 2, $P_1$ sarebbe stato interrotto per favorire l'esecuzione del nuovo processo. Inoltre, nel caso in cui due processi abbiano la stessa priorità si segue la dinamica FIFO, ovvero il primo processo che entra nella coda viene eseguito per primo rispetto ai processi con medesima priorità
 
 % 
-\subsubsection{Scheduling con prirità e RR}
+\subsection{Scheduling con prirità e RR}
 Cerchiamo ora di raffinare un po' di più l'algoritmo fondendo la priorità con l'algoritmo di Round Robin. In particolare, nel momento in cui si hanno più processi che hanno lo stesso livello di priorità, al posto di seguire un approccio FIFO, si utilizza il Round Robin, garantendo quindi una maggiore reattività ai processi. Partiamo dal seguente set di processi:
 \begin{table}[h]
     \centering
@@ -227,7 +227,7 @@ Cerchiamo ora di raffinare un po' di più l'algoritmo fondendo la priorità con 
 Dopo di che si effettua l'algoritmo RR con \textit{q} = 2 sui processi 2 e 3 in quanto hanno la stessa priorità. Infine, si fa lo stesso procedimento che con i processi 1 e 5 che hanno priortà 3. 
 
 % 
-\subsubsection{Coda multilivello}
+\subsection{Coda multilivello}
 \begin{wrapfigure}{o}{.25\textwidth}
   \includegraphics[width = \linewidth]{../res/imgs/CPU scheduling/multilevel_scheduling.png}
   \label{fig:multilevel_scheduling}
@@ -238,13 +238,13 @@ Questo ci porta al caso più complesso: immaginiamo che i processi non solo debb
 
 
 % 
-\subsection{Scheduling multiprocessore}
+\section{Scheduling multiprocessore}
 Fino ad ora abbiamo discusso di algoritmi tenendo conto del fatto che il sistema disponesse di un singolo processore; sappiamo bene però che nei sistemi moderni ormai una situazione del genere non si verifica più, con sistemi multicore. 
 
 Come possono essere gestiti diversi threads all'interno di queste architetture multiprocessore? Nel caso del \textbf{Syimmetric multiprocessing} (SMP) 
 \todo{Finisci introduzione CPU scheduling 2}
 
-\subsubsection{Symmetric multiprocessing (SMP)}
+\subsection{Symmetric multiprocessing (SMP)}
 Partiamo dalla situazione più semplice, nel casi in cui abbiamo a che fare con un'architettura SMP. In questo caso infatti abbiamo \textit{cores} che vengono gestiti in modo simmetrico (vedi paragrafo \ref{parallelismo}) e, disponendo di \textit{n} corse, l'unico problema da risolvere è come questi possano andare a gestire \textit{n} thread. Come è infatti possibile notare dalla figura \ref{fig:solutionAB}, un modo può essere quello di utilizzare una \textit{ready-queue} comune a tutti i cores oppure quello di creare una coda apposita ad ogni core per gestire i processi. 
 \begin{figure}[h]
     \centering
@@ -256,7 +256,7 @@ Partiamo dalla situazione più semplice, nel casi in cui abbiamo a che fare con 
 \end{figure}
 Entrambe le soluzioni sono più che lecite anche se ad oggi i sistemi operativi moderni tendono ad usare la seconda in quanto la prima soluzione, essendo si che si ha a che fare con una coda condivisa è complicato gestire la condivisione di tale risorsa tra i cores (problemi di \textit{race conditions}).
 
-\subsubsection{}
+\subsection{}
 % minuto 7:50 di Lez. 16-03
 
 
@@ -279,7 +279,7 @@ Entrambe le soluzioni sono più che lecite anche se ad oggi i sistemi operativi 
 % Solution A - Solution B - memory stall - memory stall 2 - two levels scheduling
 
 
-\subsection{Scheduling real-time}
-\subsection{Valutazione di un algoritmo}
+\section{Scheduling real-time}
+\section{Valutazione di un algoritmo}
 
 \todo{Finisci CPU scheduling: parte 2}

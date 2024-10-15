@@ -1,11 +1,11 @@
 \pagebreak
-\section{Implementazione del file system}
+\chapter{Implementazione del file system}
 In questo capitolo ci occuperemo di discutere in dettaglio il modo in cui viene implementato il file system. Capiremo che cos'è la struttura di un file systems e che tipo di operazioni supporta. Discuteremo inoltre come sono implementate le directories e i diversi metodi di allocazione del file systems: questi aspetti sono già stati citati nel capitolo precedente ma in questo capitolo scaviamo più nel profondo e cerchiamo di capire come questi siano effettivamente creati. Parleremo infine della gestione dello spazio libero e di performance. 
 
-\subsection{Struttura e operazioni del file system}
+\section{Struttura e operazioni del file system}
 La periferica fisica, come il disco, ci permette di leggere e scrivere i dati. Tipicamente è composto di \textbf{blocchi} che vanno da 512 a 49 bytes. Il file system risiede sulla memoria secondaria e che fornisce l'interfaccia utente per memorizzare tali dati mappando il loro indirizzo logico in un indirizzo fisico sul disco. Inoltre il file system deve anche essere in grado di fornire lo spazio sulla feriferica in modo efficiente. 
 % 
-\subsubsection{Livelli}\label{layers}
+\subsection{Livelli}\label{layers}
 \begin{wrapfigure}{o}{.30\textwidth}
   \includegraphics[width = \linewidth]{../res/imgs/file system implementation/file system layers.png}
   \caption{I livelli del file system.}
@@ -21,7 +21,7 @@ Questa stratificazione del file system è stata ideata per ridurre la complessit
 Possiamo trovare una grande vastità di file systems implementati in maniera divers. Alcuni di questi sono dedicati a perficeriche removibili come nel caso della ISO 9660, utilizzata per i CD. Altri invece variano a seconda del sistema operativo dato che sistemi operativi diversi spesso sono pensati per operazioni diverse. Ecco quindi che in Unix troviamo \textbf{UFS}, in Windows, storicamente FAT (\ref{FAT}), e adesso \textbf{NTFS} mentre in Linux troviamo \textbf{ext3} ed \textbf{ext4}. Citiamo anche il \textbf{ZFS}, trovato in Solaris e GoogleFS che sono più recenti.
 
 % 
-\subsubsection{Strutture per le operazioni}
+\subsection{Strutture per le operazioni}
 Naturalmente il file system deve supportare operazioni per lavorare con i dati. Per fare ciò necessita di contenere delle strutture dati per agevolare e implementare tali operazioni. Possiamo dividere le strutture in due tipo: quelle che risiedono sul disco e quelle che vivono in memoria. 
 
 Sul disco troviamo tipicamente dei blocchi dedicati al booting ovvero i \textbf{boot control block} che servono appunto fare partire il sistema operativo: fare eseguire il minimo necessario per poi far partire il kernel e tutto il resto. È inoltre presente il \textbf{volume control block} che contiene informazioni sul volume: il numero totale di blocchi sul device oppure il numero di blocchi liberi. Infine è presente la \textbf{directory} - o almeno parte di essa - che, come sappiamo (\ref{directory}), è utilizzata per organizzare i files: contiene quindi anche gli FCB.
@@ -29,7 +29,7 @@ Sul disco troviamo tipicamente dei blocchi dedicati al booting ovvero i \textbf{
 Nella memoria invece sono presenti le strutture per implementare le system calls. Troviamo quinti la \textbf{mount table}, che contene le parti che sono collegate al sistema operativo. È presente anche la \textbf{in-memory directory structure}, ovvero la memoria che si occupa detenere le informazioni riguardanti le directory utilizzate più recentemente. Nella memoria possiamo anche trovare \textbf{system-wide open-file table} ovvero la tabella di sistema dei file aperti che contiene una copia degli FCB (\ref{FCB}). Come c'è la tabella di sistema è presenta anche una tabella con i FCB dei files aperti per ogni processo. Infine sono anche presenti dei buffers per agevolare le operazioni di lettura e scrittura.
 
 % 
-\subsubsection{File Control Block (FCB)}\label{FCB}
+\subsection{File Control Block (FCB)}\label{FCB}
 Il \textit{File Control Block}, già menzionato molte volte all'interno di questo capitolo, è una struttura mantenuta dal sistema operativo che, per ogni file, contiene diverse informazioni riguardanti tale file. Dalla figura \ref{fig:FCB} possiamo notare che in genere sono memorizzati i permessi del file (come le liste di accesso, \ref{permissions}),
 \begin{figure}[h]
     \centering
@@ -41,10 +41,10 @@ informazioni temporali (come la creazione o l'ultimo accesso), proprietà, dimen
 \todo{completa slide 10 e 11 (minuto 18 - 24}
 
 % 
-\subsection{Metodi di allocazione}
+\section{Metodi di allocazione}
 Arriviamo al punto più critico: come avviene effettivamente allocato lo spazio sul disco per contenere i file? Ci sono tre tecniche principali - allocazione contigua, concatenata e indicizzata - e le approfondiremo tutte in questo paragrafo.
 
-\subsubsection{Allocazione contigua}
+\subsection{Allocazione contigua}
 Nell'allocazione contigua il disco viene diviso in un numero di blocchi che possono essere da 512 byte o 4096 byte. I file sono quindi allocati in \textbf{locazione contigue}, una vicina all'altra.
 \begin{figure}[h]
     \centering
@@ -59,7 +59,7 @@ Questa soluzione però porta con sé dei problemi non indifferenti. Innanzitutto
 Un possibile miglioramento di questa tecnica si basa sull'uso di \textbf{extent}, non a caso questa versione migliorata è chiamata \textit{extent-based system}. Un extent è un insieme di più blocchi contigui sul disco. Possiamo dire che è un approccio semi-contiguo nel senso che è contiguo sicuramente per tutta la lunghezza di un extent. Questa soluzione è implementata nel \textit{Veritas file system}. 
 
 % 
-\subsubsection{Allocazione concatenata}
+\subsection{Allocazione concatenata}
 In questa tecnica, al posto di utilizzare una disposizione contigua si sceglie di disporre il file in una lista di blocchi non contigui i quali possono essere sparsi all'interno del disco. Come possiamo osservare dalla figura \ref{fig:allocazione concatenata} questo comporta la necessità di avere un puntatore in un blocco $n$ che punta al blocco $n + 1$.
 \begin{figure}[h]
     \centering
@@ -81,7 +81,7 @@ Un esempio di questo tipo di allocazione è la storica \textbf{FAT} (\textit{Fil
 Questa è una tabella dedicata che è detenuta all'inizio del volume del disco ed ogni elemento di tale tabella contiene l'indice del blocco successivo. Quindi per identificare quali sono i blocchi di un determinato file è sufficiente mantenere l'informazione nella directory del blocco iniziale e poi nella \textit{file table} c'è la posizione dell'elemento successivo e così via fino a che non si raggiunga la fine del file. Con questa strategia, per effettuare l'accesso su un file non è necessario scorrere gli effettivi blocchi sul file bensì è sufficiente scorrere la FAT che rappresenta la struttura di quei blocchi. 
 
 % 
-\subsubsection{Allocazione indicizzata}
+\subsection{Allocazione indicizzata}
 L'ultimo metodo che abbiamo elencato è il metodo di allocazione indicizzata. Anche questa tecnica si basa sui puntatori ma cerca di utilizzarli in maniera efficiente. Come è possibile notare nell'illustrazione \ref{fig:allocazione indicizzata}, al posto di salvare su ogni blocco un puntatore (o indirizzo) al blocco successivo, è più efficiente memorizzare tutti gli indirizzi tutti i blocchi del file su un unico blocco, chiamato \textbf{index block}.
 \begin{figure}[h]
     \centering
@@ -113,19 +113,19 @@ Supponiamo che un blocco sia di 512 byte e gli indirizzi siano a 32 bit (4 byte)
 Il vantaggio di questo schema è che la complessità arriva solo nel caso in cui si lavora con file di grandi dimensioni. Se invece si lavora sempre con file sufficientemente piccoli (6KB) si avranno a disposizioni i 12 puntatori iniziali che sono molto più rapidi rispetto agli ultimi 3. Si nota infatti che l'inode risiede nella memoria e di conseguenza per effettuare l'accesso ai blocchi puntati dai 12 puntatori l'unica accesso al disco che si effettua è proprio quello di prelevamento del file. 
 
 % 
-\subsubsection{Performance}\label{performance SSD}
+\subsection{Performance}\label{performance SSD}
 Come abbiamo notato è che il metodo migliore in assoluto non esiste ma è strettamente legato al tipo di accesso che effettuiamo. Se infatti l'accesso è sequenziale quasi tutte le tecniche vanno più che bene. Se invece l'accesso è di tipo random la scelta della tecnica gioca una ruolo significativo. Inoltre è importante aver chiaro che non è assolutamente detto che le tecniche più complesse siano le migliori: se prendiamo in considerazione un sistema di backup che memorizza dei file enormi (GB oppure TB) in modo contiguo, non è assolutamente necessario implementare una struttura indicizzata come l'inode, è sufficiente utilizzare l'allocazione contigua che è molto più semplice da implementare.
 
 È bene inoltre puntualizzare che nel caso delle memorie non volatili (paragrafo \ref{NVM}) come le SSD, le tecniche che abbiamo appena elencato non sono compatibili dato che le SSD sono fisicamente organizzate in maniera diversa rispetto agli HDD.
 
 % 
-\subsection{Gestione dello spazio libero}\label{free space}
+\section{Gestione dello spazio libero}\label{free space}
 Oltre alla memorizzazione dei dati, nella memoria secondaria è importante tenere traccia dei blocchi che sono liberi e utilizzabili in futuro. Tipicamente il sistema operativo mantiene la \textbf{free space list} che è una lista che tiene traccia dei blocchi (o cluster di blocchi) che sono liberi. Ci sono diversi metodi per implementare questa lista - come la free list o il grouping - e in questo paragrafo li discuteremo brevemente. 
 
 Sprechiamo prima due parole sull soluzione più banale: il \textbf{bit vector} o, in alternativa, la \textit{bitmap}. Questa è una sequenza di $n$ bit che rappresentano gli $n$ blocchi; se il bit \textit{i}-esmo è impostato ad 1 significa che il blocco \textit{i}-esimo è libero. Per esempio sei sono liberi i blocchi 1, 3, 4, 5, 9 allora il bit vector sarà \texttt{101110001}.
 
 % 
-\subsubsection{Free list}
+\subsection{Free list}
 \begin{wrapfigure}{R}{.30\textwidth}
     \centering
     \includegraphics[width = .25\textwidth]{../res/imgs/file system implementation/free-space list.png}
@@ -133,7 +133,7 @@ Sprechiamo prima due parole sull soluzione più banale: il \textbf{bit vector} o
 Ritornano anche in questo caso utili le liste. La free list è una lista che tiene traccia di tutti i blocchi che sono liberi all'interno del disco. Ciascun blocco in realtà non è completamente vuoto ma contiene, naturalmente, il puntatore al blocco libero successivo. Quindi l'unica cosa di cui dobbiamo tener traccia è il puntatore al primo blocco (\textbf{head}), a differenza invece della bitmap che cresce al crescere dello spazio di memorizzazione. Nel momento in cui si ha bisogno di un blocco si va ad occupare il primo e si aggiorna l'head al secondo blocco (che diventa quindi il primo). Ne consegue che, se abbiamo bisogno del primo blocco o dei primi $n$ blocchi, non è assolutamente necessario scorrerla tutta, quindi il problema della complessità non è così significativo. Inoltre non è facile ottenere dello spazio contiguo in quanto questo tipo di implementazione si occupa, ovviamente, di blocchi sparpagliati. 
 
 % 
-\subsubsection{Counting e grouping}\label{Counting}
+\subsection{Counting e grouping}\label{Counting}
 \begin{wrapfigure}{L}{.3\textwidth}
     \centering
     \includegraphics[width = .3\textwidth]{../res/imgs/file system implementation/grouping.png}
@@ -141,7 +141,7 @@ Ritornano anche in questo caso utili le liste. La free list è una lista che tie
 Altre soluzioni lecite si ottengono attraverso un raggruppamento dei blocchi, come nel \textbf{grouping} (figura a lato): molto simile alla soluzione di indicizzazione multi-livello che abbiamo discusso precedentemente. Potremmo infatti avere un blocco dedicato che contiene tutti i blocchi liberi i quali, a loro volta, possono puntare a blocchi liberi. Il metodo \textbf{counting} invece, dato che spesso lo spazio è liberato in modo contiguo quindi è sufficiente tenere traccia del numero di blocchi successivi che sono liberi. Non è quindi sufficiente tenere traccia di un indirizzo e il numero di blocchi che, oltre a quell'indirizzo, sono liberi uno dopo l'altro. Nel caso in cui il contatore del numero di blocchi contigui è $> 1$ allora possiamo dire che l'implementazione di un contatore risulta più conveniente rispetto alla \textit{free list}.
 
 % 
-\subsubsection{Altri metodi}
+\subsection{Altri metodi}
 Concludiamo menzionando altri metodi usati in altri file system che si occupano di risolvere altri problemi. Per esempio \textbf{ZFS} - presente in Solaris - divide lo spazio del disco in \textit{metaslab} i quali hanno associato una \textbf{spacemap} che è un log per memorizzare le attività effettuate in quella particolare zona del disco. Osserviamo inoltre che questo file system è ottimo per la gestione di files di grandi dimensioni grazie anche ad un algoritmo basato sul counting (\ref{Counting})
 
 Menzioniamo anche un'altra tecnica, chiamata \textbf{TRIM}, che è un nuovo meccanismo utilizzato per gestire le NVM. Ricordiamo infatti che sulle SSD non è possibile effettuare un'operazione di sovrascrittura (vedi \ref{NVM}) bensì è necessario prima cancellare il blocco per poi scrivere la nuova informazione e quindi è necessario utilizzare delle strategia diverse. In questo caso il metodo TRIM riesce a ridurre la necessità di fare frequentemente \textit{garbage collection} e minimizza la possibilità di eliminare grandi blocchi di dati

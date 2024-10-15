@@ -1,7 +1,7 @@
-\section{Sincronizzazione}\label{sincronizzazione}
+\chapter{Sincronizzazione}\label{sincronizzazione}
 Come abbiamo visto nel capitolo \ref{processes},i processi possono essere eseguiti sia in parallelo che in concorrenza, la quale non è altro che un modo per far apparentemente girare due processo in maniera parallela quando in realtà stanno condividendo lo stesso \textit{core} del sistema. Un processo può quindi essere interrotto in qualunque momento da un algoritmo di scheduling (come il \textit{Round Robin}) per fare spazio ad un altro processo. Cosa succede però se viene interrotto in un momento in cui sta accedendo nella memoria condivisa con un altro processo e, lasciando spazio all'altro, vengono modificati dei dati? Capiremo, in questa sezione, che l'obiettivo da raggiungere è quindi la \textbf{cooperazione} tra processi in modo tale che non si verifichino situazioni spiacevoli.
 
-\subsection{Sezione critica}
+\section{Sezione critica}
 Poniamo ora di avere a che fare con due processi i quali effettuano due \texttt{fork} simultanei (figura \ref{fig:sim_fork_issue}).
 \begin{figure}[!h]
     \centering
@@ -13,7 +13,7 @@ Supponiamo di avere una variabile, chiamata \texttt{next\_available\_pid} che co
 
 Quello che abbiamo appena visto non è altro che un esempio di \textbf{critical section problem}. Generalizzando, possiamo dire che ogni processo è composto di un segmento di codice che deve avere un \textbf{accesso esclusivo} in quanto ha un accesso in scrittura dove aggiorna tabelle, modifica variabili o scrive su files. Di conseguenza si cerca di non interrompere un processo nel momento in cui questo è nella sua \textbf{sezione critica}.
 % 
-\subsubsection{Requisiti}\label{CS requisiti}
+\subsection{Requisiti}\label{CS requisiti}
 È stato stilato un elenco di 3 punti di requisiti che devono essere rispettati affinché non vengano generate situazioni dove un processo viene interrotto durante la sua sezione critica.
 \begin{enumerate}
     \item \textbf{Mutua esclusione}: se il processo $P$ sta eseguendo la sua parte critica nessun altro processo deve interromperlo;
@@ -21,7 +21,7 @@ Quello che abbiamo appena visto non è altro che un esempio di \textbf{critical 
     \item \textbf{Attesa limitata}: deve esistere un limite massimo per cui un processo deve concludere la sua parte critica. 
 \end{enumerate}
 % 
-\subsubsection{Soluzioni inefficienti}
+\subsection{Soluzioni inefficienti}
 Una prima idea banale è quella di \textbf{disabilitare} gli \textbf{interrupt} nel momento in cui un processo (un \textit{thread}) sta eseguendo la sua parte critica. Questa però è una soluzione poco elegante e anche poco funzionale. Si rischia infatti di far aspettare molto altri processi i quali necessitano di eseguire la loro sezione critica (starvation). 
 
 Si è quindi pensato ad una soluzione un po' più elegante, ma che comunque è una forma embrionale rispetto a ciò che vedremo. Stiamo parlando di una semplice \textbf{soluzione software} tra due processi dove entrambi condividono una variabile \textit{booleana} \texttt{turn} che indica di chi è il turno per eseguire la sezione critica.
@@ -35,7 +35,7 @@ while(true){
 \end{lstlisting}
 Con questa soluzione, è rispettata la richiesta di mutua esclusione ma i punti (2) e (3) non sono rispettati: il processo \texttt{j} potrebbe anche durare un'ora e ci sarebbe un'ora di attesa. Non sono quindi i rispettati i limiti di attesa e nemmeno il progresso dei processi.
 % 
-\subsection{Soluzione di Peterson}
+\section{Soluzione di Peterson}
 Una prima soluzione un po' più raffinata è quella di Peterson. In questa soluzione i due processi condividono due variabili:
 \vspace{-5px}
 \begin{itemize}
@@ -57,7 +57,7 @@ while (true){
 \end{lstlisting}
 Osserviamo che possiamo intendere l'esecuzione della parte critica di un processo come una galleria a senso unico alternato: se un processo deve entrarci ma al suo interno ce n'è già un altro attende, altrimenti ci entra. L'esecuzione in "parallelo" è quindi mantenuta dato che un processo può essere molto lontano dalla galleria mentre il secondo la sta attraversando. Con questo modello, quindi, tutti e 3 i requisiti sono rispettati.
 % 
-\subsubsection{Architetture moderne}
+\subsection{Architetture moderne}
 Ciò nonostante, questa soluzione diventa obsoleta per i sistemi moderni \textit{multicore} e \textit{multithread}. Questo perché nelle architetture moderne il compilatore si prende la libertà di riordinare e riorganizzare il codice. Vediamo un esempio di due thread (assumiamo che le variabile condivise siano \texttt{x} e \texttt{flag}):
 \begin{lstlisting}
 /* THREAD 1 */
@@ -79,10 +79,10 @@ Al fine di fare in modo che la soluzione di Peterson funzioni anche nelle archit
 
 Con l'introduzione delle memory barrier ora la soluzione di Peterson rimane valida. Questo perché quando viene invocato un \texttt{memory\_barrier()} il sistema si assicura che tutti i load e store in memoria vengano completati prima di ogni altro load e store. Quindi anche se il codice venisse riordinato, la memory barrier si assicura che le modifiche in memoria siano completate. 
 % 
-\subsection{Sincronizzazione via hardware}
+\section{Sincronizzazione via hardware}
 Tra le diverse soluzioni che abbiamo visto, la più gettonata rimane comunque l'implementazione di particolari \textbf{istruzioni hardware} che permettono di modificare il contenuto di una \textit{word} in memoria oppure di effettuare uno \textit{swap} di due word.
 
-\subsubsection{Test and set}
+\subsection{Test and set}
 La prima delle due istruzioni HW che discuteremo è la \texttt{test\_and\_set} dove prende un input booleano e lo memorizza in una variabile temporanea \texttt{tmp}; in secondo luogo il valore in ingresso viene settato a \texttt{true} e infine la variabile temporanea viene restituita. Lo pseoudcodice di quest istruzione è il seguente (ricordiamo che sono istruzioni a livello HW, quindi il codice è solo a scopo concettuale):
 \begin{lstlisting}
 boolean test_and_set(boolean *target){
@@ -104,7 +104,7 @@ while(true){
 }
 \end{lstlisting}
 % 
-\subsubsection{Compare and swap}
+\subsection{Compare and swap}
 La seconda istruzione HW che andiamo a discutere si chiama \texttt{compare\_and\_swap} e, come per la precedente, anch'essa è un'istruzione atomica. Come vedremo, questa istruzione, ha ben 3 variabili in ingresso:
 \vspace{-5px}
 \begin{itemize}
@@ -135,7 +135,7 @@ while(true){
 \end{lstlisting}
 
 % 
-\subsubsection{Variabili atomiche}
+\subsection{Variabili atomiche}
 Istruzioni come \texttt{compare\_and\_swap} sono utilizzate per comporre dei blocchi per comporre altri oggetti di sincronizzazione. Uno tra questi oggetti è la variabile atomica che fornisce degli aggiornamenti elementare a dei dati primitivi. Segue infatti l'esempio di \texttt{increment()} dove il valore intero \texttt{v} viene incrementato senza interruzioni
 \begin{lstlisting}[caption={Esempio di una variabile atomica \texttt{increment()}}]
 void increment(atomic_int *v){
@@ -146,7 +146,7 @@ void increment(atomic_int *v){
 }
 \end{lstlisting}
 % 
-\subsection{Mutex lock e Semafori}
+\section{Mutex lock e Semafori}
 Le soluzioni che abbiamo visto in precedenza erano intricate e spesso non erano accessibili da applicazioni esterni; inoltre creano ulteriori complicazioni in sistemi multithreading. A questo proposito i progettisti di sistemi operativi hanno costruito diversi \textit{tool} al fine di risolvere il problema della sezione critica.
 
 Il primo che andremo a vedere è il \textbf{mutex lock} (\textbf{MUT}ual \textbf{EX}clusion lock) che è una variabile booleana che indica se il \textbf{lock}, ovvero la sezione critica è disponibile o meno. Questa è protetta da due istruzioni atomiche di acquisizione e rilascio:
@@ -194,7 +194,7 @@ P2:
 \end{lstlisting}
 Possiamo notare però che anche in questo caso $P_2$ è in una fase di busy waiting.
 
-\subsubsection{Waiting queue}
+\subsection{Waiting queue}
 Per evitare che accada è necessario implementare una \textbf{waiting queue}:
 \begin{lstlisting}[caption={Struttura del semaforo con waiting queue}]
 typedef struct {
@@ -231,10 +231,10 @@ signal(semaphore *S){
 
 Bisogna però fare attenzione a utilizzare \texttt{wait} e \texttt{signal} nel modo corretto: non si può prima invocare \texttt{signal} e poi \texttt{wait} oppure invocare \texttt{wait} due volte di seguito. Questo utilizzo incorretto delle due operazioni può generare errori.
 % 
-\subsection{Monitor}
+\section{Monitor}
 Cerchiamo ora di risolvere il problema dei semafori: le operazioni di \texttt{wait} e \texttt{signal} erano lasciate al programmatore. Questa scelta ha come unica conseguenza la generazione di errori da parte dell'utilizzatore (che, come vedremo più avanti prendono il nome di \textbf{deadlock}, capitolo \ref{deadlocks}). Cerchiamo quindi di implementare un'astrazione dei semafori al fine di limitarne i danni. Queste astrazioni di alto livello sono proprio i \textbf{monitor} i quali garantiscono l'esecuzione di un processo alla volta.
 
-\subsubsection{Struttura e implementazione}
+\subsection{Struttura e implementazione}
 La struttura di astrazione del monitor è formata da una variabile condivisa da tutti i processi, da del codice di inizializzazione per il monitor e da tante funzioni o procedure (ogni processo ha le stesse procedure).
 \begin{lstlisting}[caption={Struttura del monitor}]
 monitor name{
@@ -265,7 +265,7 @@ signal(mutex) /* libero il mutex **/
 \end{lstlisting}
 È quindi necessario modificare ogni procedura del monitor bloccando e poi rilasciando il mutex. In questo modo, a differenza dei semafori, le operazioni di \texttt{wait} e \texttt{signal} sono già implementate all'interno delle procedure che eseguono quelle operazioni, al posto del programmatore. Un esempio di utilizzo completo è presente nella sezione \ref{utilizzo monitor}.
 
-\subsubsection{Variabile di condizione}
+\subsection{Variabile di condizione}
 Oltre alla struttura base, illustrata nel paragrafo precedente, possiamo anche inserire le \textit{condition variables}  (rappresentazione in figura \ref{fig:condition_variable}) che possono eseguire le stesse due operazioni dei semafori: \texttt{wait} e \texttt{signal}.
 \begin{figure}[!h]
     \centering
@@ -277,10 +277,10 @@ In questo caso però le due operazioni sono modificate e non portano ad errori s
 
 Emerge ora un piccolo dubbio. Se ci sono diversi processi che sono in \texttt{wait}, quando viene effettuato un \texttt{x.signal()}, quale di questi processi viene eseguito per prima? Notiamo che ci troviamo in una situazione molto simile allo scheduling (capitolo \ref{CPU scheduling}) solo che, in questo caso non è più a livello di sistema operativo ma è a livello di monitor e di accesso alla sezione critica. Per risolvere questo problema ci possono essere algoritmi come FCFS oppure a livello di priorità: chi ha la priorità più alta viene fatto eseguire prima. Spesso la priorità è definita in base al tempo di utilizzo della sezione critica, ma si fa presente che se entrano nella coda processi con un tempo di utilizzo molto breve, i processi con un utilizzo lungo possono essere in attesa perenne ed andare in \textbf{stravation}. Ecco che non viene più rispettato il terzo requisito, ovvero che l'attesa di un processo per la sezione critica deve essere limitata (vedi paragrafo \ref{CS requisiti}).
 % 
-\subsection{Problemi comuni della sincronizzazione}
+\section{Problemi comuni della sincronizzazione}
 
 
-\subsubsection{Buffer limitato}
+\subsection{Buffer limitato}
 Il primo problema che andiamo a discutere è il problema del buffer limitato. Abbiamo a disposizione un buffer che contiene \textit{n} elementi, ovvero il numero di processi in coda per accedere alla loro sezione critica. Disponiamo inoltre di tre semafori:
 \vspace{-5px}
 \begin{itemize}
@@ -314,7 +314,7 @@ while(true){
 Osserviamo che i comando \texttt{wait(empty)} e \texttt{wait(mutex)} all'interno di produttore \textbf{non} possono essere invertiti. Se prima infatti viene bloccato il mutex, il consumatore non sarà più in grado di liberare il buffer che, se è pieno, porta ad un'attesa perenne il produttore in \texttt{wait(empty)}: siamo ricaduti in una situazione di \textit{deadlock}.
 
 % 
-\subsubsection{Problema dei lettori e degli scrittori}
+\subsection{Problema dei lettori e degli scrittori}
 Il secondo problema è detto dei lettori e degli scrittori. In questo caso: (1) più lettori possono leggere lo stesso dataset (che può essere anche un file su disco) contemporaneamente (per definizione, non possono modificarlo) e (2) lo scritture deve poter scrivere sul dataset senza che quest'ultimo venga letto. Solo nel momento in cui ha terminato (mutua esclusione), allora i lettori possono effettuare nuovamente l'accesso simultaneo. 
 
 Non ci soffermiamo sul codice, ci limitiamo a dire che è sufficiente utilizzare due semafori:
@@ -329,7 +329,7 @@ Non ci soffermiamo sul codice, ci limitiamo a dire che è sufficiente utilizzare
 In questo caso i problemi generati sono due. Il primo è che c'è la possibilità che lo scrittore non riesce mai ad effettuare l'accesso, entra quindi in una fase di attesa perenne. Il secondo problema che emerge è che quando lo scrittore ha effettuato l'accesso, nessun lettore è in grado di accedere: anche in questo caso si può ricadere in una fase di \textit{starvation}.
 
 % 
-\subsubsection{Problema dei 5 filosofi}\label{5_filosofi}
+\subsection{Problema dei 5 filosofi}\label{5_filosofi}
 Il problema dei 5 filosofi, rimane il più conosciuto (e il più importante).
 \begin{figure}[t!]
     \centering

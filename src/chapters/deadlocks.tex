@@ -1,11 +1,11 @@
 \pagebreak
-\section{Deadlocks} \label{deadlocks}
+\chapter{Deadlocks} \label{deadlocks}
 In questo capitolo cercheremo di approfondire i deadlocks: capiremo sotto quali condizioni si giungerà ad una soluzione di deadlock e i diversi algoritmi per la gestione dei deadlocks.
 
 \subsubsection*{Modello di sistema}
 Prima di discutere effettivamente dei deadlock è importante fare un piccola premessa. In questo capitolo avremo a che fare con sistemi che possono essere composti da \textit{m} tipi di risorse generiche: queste potrebbero essere dei dispositivi I/O, dati su disco, delle allocazioni in memoria, la CPU oppre dei semafori generici. Queste risorse vengono definite con la notazione $R_m$. Inoltre, ogni tipo di risorsa può essere \textbf{singolo}, come un slot del DVD sul computer, oppure \textbf{multiplo} come la presenza di diverse porte USB oppure molti buffer in memoria.
 % 
-\subsection{Nozioni fondamentali}
+\section{Nozioni fondamentali}
 Ripassiamo innanzitutto il concetto di deadlock. Prendiamo il caso in cui due semafori $S_1$ ed $S_2$, entrambi inizializzati a 1, siano condivisi da due thread $T_1$ e $T_2$. Osservando lo pseudo-codice seguente, si ha una classica situazione di deadlock. Se $T_1$ e $T_2$ sono eseguiti contemporaneamente, $T_1$ occupa subito $S_1$ e $T_2$ occupa subito $S_2$. Dopo di che $T_1$ aspetta $S_2$ che però è occupato da $T_1$ il quale è in attesa di $S_1$, occupato da $T_1$. Siamo quindi in una situazione di stallo dove entrambi i thread stanno aspettando l'altro e nessuno dei due termina l'esecuzione
 
 \begin{lstlisting}[caption = {Classica situazione di deadlock}]
@@ -20,7 +20,7 @@ Ripassiamo innanzitutto il concetto di deadlock. Prendiamo il caso in cui due se
 % 
 
 % 
-\subsubsection{Caratterizzazione}\label{4_punti_deadlock}
+\subsection{Caratterizzazione}\label{4_punti_deadlock}
 Possiamo osservare che si devono verificare 4 condizioni affinché si arrivi ad una situazione di deadlock.
 \vspace{-5px}
 \begin{enumerate}
@@ -33,7 +33,7 @@ Possiamo osservare che si devono verificare 4 condizioni affinché si arrivi ad 
 Se almeno una di queste quattro condizioni \textbf{non} è \textbf{verificata} allora non si è in una situazione di deadlock.
 
 % 
-\subsubsection{Grafo risorsa-allocazione}
+\subsection{Grafo risorsa-allocazione}
 Uno strumento molto importante, utile per visionare i diversi casi di deadlock è il grafo risorsa-allocazione. Questo grafo è composto, come ogni grafo, da vertici e archi. I vertici si suddividono in due tipi: il primo tipo rappresenta la risorsa $R_m$ mentre il secondo tipo indica il thread $T_n$. Il grafo è \textbf{diretto}, ciò significa che gli archi hanno una direzione. In particolare $R \to T$ indica che il thread $T$ detiene/occupa la risorsa $R$, mentre $T \to R$ segnala che il thread $T$ è in attesa della risorsa $R$. Inoltre, si osserva che generalmente i vertici che rappresentano una risorsa multipla contengono tanti pallini ($\bullet$) quante sono le istanze di quella risorsa disponibili (come le 5 porte USB). 
 
 Prendiamo come esempio la figura \ref{fig:grafo_deadlock}. Possiamo notare che rispetta tutte "regole" del grafo risorsa-allocazione. In particolare possiamo affermare che $R_1$ ed $R_3$ sono risorse singole mentre $R_2$ ed $R_4$ sono risorse multiple (con, rispettivamente, 2 e 4 istanze).
@@ -95,12 +95,12 @@ Come vedremo in questo capitolo, ci sono diversi metodi finalizzati alla gestion
 \end{enumerate}
 
 % 
-\subsection{Avoidance}\label{avoidance}
+\section{Avoidance}\label{avoidance}
 Il secondo approccio che andremo a discutere più a fondo è una sorta di miglioramento della prevenzione. In questo caso si cerca proprio di \textbf{evitare} di ricadere in situazioni che possono portare al deadlock, è una prevenzione molto più \textit{strict}.
 
 Affinché questo approccio funzioni però deve essere fornita un'informazione importante da parte del processo, ovvero il numero massimo di risorse per tipo che il processo necessita durante la sua esecuzione. Per esempio, 6 risorse di tipo A, 5 risorse di tipo B e 2 risorse di tipo C.
 
-\subsubsection{Safe state}
+\subsection{Safe state}
 Il safe state, ovvero lo \textbf{stato sicuro}, è una situazione in cui esiste un ordine di esecuzione di thread secondo il quale tutti i thread possono essere completati uno dopo l'altro. Quando un processo fa la richiesta per le risorse, prima di concederle, l'algoritmo (che vedremo in seguito ) controlla se dopo la cessione delle risorse si è in una situazione ancora safe. Se si, allora le risorse vengono occupate dal processo, altrimenti il processo deve aspettare il termine di alcuni thread.
 
 Nella primo grafo della figura \ref{fig:safe_unsafe} si è in una condizione non sicura in quanto non esiste una sequenza di esecuzione dei processi dove non si verifichi una situazione di deadlock. 
@@ -135,7 +135,7 @@ Nel secondo grafo invece si è in una situazione safe in quanto esiste una seque
 
 \noindent Ricordiamo infine che gli algoritmi che vedremo in questo paragrafo al fine di prevenire i deadlock \textbf{evitano} di entrare in \textbf{unsafe state}, rimanendo quindi in safe state.
 % 
-\subsubsection{Algoritmo sul grafo risorsa-allocazione}
+\subsection{Algoritmo sul grafo risorsa-allocazione}
 Iniziamo con un algoritmo che funziona solo nel caso di \textbf{risorse singole}, ovvero nel caso in cui si ha solo un pallino ($\bullet$) nel grafo, e quindi ogni tipi di risorsa ha una sola istanza. Introduciamo ora la nozione di \textbf{claim edge} ovvero un arco tratteggiato che indica che il processo $T_i$ può richiedere la risorsa $R_j$. Questi archi diventano \textbf{request edge} nel momento in cui si effettua la richiesta e poi si trasformano a loro volta in \textbf{assignements edge} nel momento in cui stanno utilizzando la risorsa. Osservando il grafo in figura \ref{fig:claim_edge} notiamo che $T_1 \to R_2$ è un claim edge, $T_2 \to R_1$ è un request edge e $R_1 \to T_1$ è un assigmenent edge. 
 \begin{figure}[h]
     \centering
@@ -152,7 +152,7 @@ Nella situazione presentata in figura \ref{fig:claim_edge}, si rischia di essere
     \label{fig:request_denied}
 \end{figure}
 % 
-\subsubsection{Algoritmo del banchiere}
+\subsection{Algoritmo del banchiere}
 Passiamo ora ad una situazione più reale, quella in cui esistono più risorse con più istanze ciascuna. L'algoritmo a cui si fa affidamento è detto \textit{Banker's algorithm}, ovvero l'algoritmo del banchiere.
 
 Innanzitutto, definiamo con $n$ il numero di processi ed $m$ il numero di tipi di risorse; definiamo poi tre matrici e un'array, strutture sul quale l'algoritmo si appoggia:
@@ -271,12 +271,12 @@ A questo punto ci sono abbastanza risorse per terminare un altro processo come, 
 
 Può succedere che durante l'esecuzione dei thread possono arrivare altre richieste che devono essere accettate o meno. Per esempio se prima dell'esecuzione $T_4$ avesse fatto una richiesta $[3,3,0]$, la richiesta sarebbe stata rifiutata dato che le risorse disponibili erano minori rispetto alla richiesta.
 % 
-\subsection{Detection}
+\section{Detection}
 L'ultimo approccio che andiamo a discutere è il rilevamento del deadlock: si va alla ricerca di tale e, una volta trovato, si passa al salvataggio, alla \textbf{recovery}. Anche in questo caso, come per l'approccio di \textit{avoidance} (paragrafo \ref{avoidance}) sono presenti due algoritmi, uno studiato per avere solo un'istanza per risorsa e il secondo che copre anche il caso in cui ci siano più istanze per risorse.
 
 
 
-\subsubsection{Istanza singola}
+\subsection{Istanza singola}
 In questo primo caso si fa riferimento ad un secondo grafo particolare chiamato \textbf{wait-for graph}. È una modifica del \textit{resource-allocation graph} dove si evidenzia il fatto che un thread sta aspettando il termine dell'esecuzione di un altro thread: non sono infatti presenti vertici che rappresentano risorse a ci sono solo nodi che indicano i thread.
 \begin{figure}[h]
     \centering
@@ -290,7 +290,7 @@ In figura \ref{fig:wait-for} si osserva la traduzione di un grafo risorsa alloca
 
 L'algoritmo di cui stiamo parlando infatti, per rilevare un deadlock, si limita a creare un \textit{wait-for graph} e controllare la presenza di cicli\footnote{Da studente che ha seguito il corso "Dati e Algoritmi" penso che si utilizzino algoritmi basati su BFS oppure DFS.}. Una volta trovato il ciclo si è sicuri di aver trovato il deadlock e si passa alla \textit{deadlock recovery} (vedi paragrafo \ref{recovery}). Possiamo quindi notare che nella figura \ref{fig:wait-for} si è in una condizione di deadlock dato che il thread $T_1$ sta attendendo il termine di $T_2$ che è in attesa di $T_4$ che a sua volta sta aspettando $T_1$. Una situazione analoga è presente anche con i thread $T_1,T_2,T_3,T_4$.
 % 
-\subsubsection{Istanze multiple}
+\subsection{Istanze multiple}
 Nel caso invece delle istanze multiple, anche in questo algoritmo si fa affidamento a diverse strutture dati, proprio come nell'algoritmo del banchiere. Avremo quindi a che vedere con $n$ processi che hanno a che fare con $m$ tipi di risorse che interagiranno con due matrici e un vettore.
 \vspace{-5px}
 \begin{itemize}
@@ -369,7 +369,7 @@ Mettiamoci però nel caso in cui $T_2$ debba richiedere una risorsa di tipo C.
 \end{table}
 In questo caso le risorse che vengono rilasciate al termine di $T_0$ non sono necessarie per terminare gli altri thread e ci troveremo quindi in una situazione di deadlock.
 % 
-\subsubsection{Deadlock recovery}\label{recovery}
+\subsection{Deadlock recovery}\label{recovery}
 Come dobbiamo comportarci nel momenti in cui rileviamo un deadlock? La soluzione più brutale è quella di terminare tutti i processi che si trovano all'interno del deadlock (come fare un \texttt{CTRL + C} ad ogni processo). Esiste però un altro modo un po' più elegante che fa comunque affidamento alla \textbf{terminazione dei processi}: si cerca infatti di terminare ad uno ad uno tutti i thread che compongono il ciclo. L'ordine di terminazione può essere scelto in base alla priorità, in base alle risorse che il thread ha utilizzato o altro.
 
 Una seconda strada invece si basa sul \textbf{resource preemption}, ovvero sul rubare delle risorse che sono detenute da un altro processo o thread. In questo caso si sceglie una vittima a cui rubare le risorse e si cerca di far terminare un thread. Si ricorda che anch ein questo caso si può arrivare ad una situazione di \textit{starvation} se lo stesso thread è sempre preso come vittima.

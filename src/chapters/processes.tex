@@ -1,8 +1,8 @@
-\section{Processi}\label{processes}
+\chapter{Processi}\label{processes}
 Iniziamo dalle basi. Un \textbf{processo} è un programma in esecuzione, è un'istanza del programma che viene eseguita sulla CPU. Possiamo infatti avere diverse istanze dello stesso programma, ognuna che viene eseguita indipendentemente dall'altra. Possiamo quindi dire che il programma, ovvero il file eseguibile (\texttt{.exe}) è qualcosa di passivo mentre il processo è qualcosa di \textbf{attivo}.
 
 % 
-\subsection{Allocazione in memoria}
+\section{Allocazione in memoria}
 Andando un po' più in dettaglio, quando il programma è in esecuzione, questo viene eseguito in maniera sequenziale. Al processo, una volta che è eseguito, viene dedicato dello spazio in memoria dal sistema operativo. Come è possibile osservare nella figura \ref{fig:memory_layout}, la memoria messa a disposizione dal sistema operativo è suddivisa in diverse zone, ciascuna con un particolare compito.
 \begin{figure}[h]
     \centering
@@ -13,7 +13,7 @@ Andando un po' più in dettaglio, quando il programma è in esecuzione, questo v
 Prima di tutto, il codice sorgente del programma viene caricato nella zona \textbf{text}. Dopo di che, nella parte dedicata ai dati (\textbf{data}) vengono salvate generalmente le variabili globali, che permangono per tutta la vita del processo. Sono infine presenti due parti: lo \textbf{stack} e l'\textbf{heap} che crescono in direzione opposta. Lo stack contiene dati temporanei come variabili locali mentre l'heap è utilizzato al fine di allocare la memoria dinamicamente durante la vita del programma\footnote{Come abbiamo visto con C++, heap e \textit{freestore} sono quasi dei sinonimi.}.
 
 % 
-\subsubsection{Process Control Block (PCB)}\label{PCB}
+\subsection{Process Control Block (PCB)}\label{PCB}
 Ad ogni processo che è mandato in esecuzione è assegnata una particolare struttura dati dal sistema operativo, ovvero il \textit{Process Control Block} (figura \ref{fig:PCB}). Il PCB contiene diverse informazioni riguardanti il processo, in particolare:
 \vspace{-5px}
 \begin{enumerate}
@@ -41,7 +41,7 @@ Ad ogni processo che è mandato in esecuzione è assegnata una particolare strut
 Al fine di andare a modificare delle informazioni del processo (come lo stato corrente) il sistema operativo scorre la lista e, dopo aver selezionato il PCB del processo desiderato, andrà a modificare il campo. 
 
 % 
-\subsection{Stati di un processo}
+\section{Stati di un processo}
 Durante l'intera vita del processo, questo passa in diversi stati (figura \ref{fig:process_life}). I principali sono:
 \vspace{-5px}
 \begin{enumerate}
@@ -68,7 +68,7 @@ Durante l'intera vita del processo, questo passa in diversi stati (figura \ref{f
 \end{itemize}
 
 % 
-\subsubsection{Context switch}\label{context_switch}
+\subsection{Context switch}\label{context_switch}
 Quando un processo A viene un rimosso dalla CPU, nel caso in cui sia stato interrotto per far spazio ad un altro processo B, è necessario salvare l'informazione del processo A in modo tale da poterlo sostituire con il processo B per poi, in un secondo momento, riuscire a ricaricare il processo A. Questa operazione è  detta \textbf{context switch} (figura \ref{fig:context_switch}) e viene effettuata in pochi microsecondi. Ciò nonostante se è effettuata in maniera molto frequente durante l'esecuzione di diversi processi può causare molto spreco di tempo: il context switch può quindi generare un \textbf{overhead} che va sicuramente preso in considerazione negli algoritmi di scheduling (capitolo \ref{CPU scheduling}).
 \begin{figure}[h]
     \centering
@@ -79,7 +79,7 @@ Quando un processo A viene un rimosso dalla CPU, nel caso in cui sia stato inter
 È importante notare che il context switch tipicamente richiede anche un aggiuntivo utilizzo della memoria, che andremo a discutere nel capitolo \ref{main memory} quando discuteremo di \textit{paginazione} e \textit{swapping}.
 
 % 
-\subsubsection{Creazione di un processo}\label{creazione di un processo}
+\subsection{Creazione di un processo}\label{creazione di un processo}
 Al fine di creare un processo ce ne deve sempre essere uno iniziale (\textit{parent}) che genera il quello nuovo (\textit{child}). Ogni nuovo processo ha un identificativo, il \textbf{pid}, che distingue univocamente il processo creato. Al momento della creazione è possibile specificare alcune opzioni al fine di creare il processo child in un determinato modo. Prima tra tutte è l'opzione di \textbf{condivisione di risorse}, dove si può specificare se il figlio condivide le stesse risorse del genitore, un sottoinsieme oppure si può specificare che il figlio non condivida alcuna risorsa con il \textit{parent}. Inoltre si possono specificare le opzioni di \textbf{esecuzione}: si specifica se il figlio e il genitore possano essere eseguiti in maniera concorrente oppure se il \textit{parent} deve aspettare il termine dell'esecuzione del \textit{child}. Infine si può anche specificare lo \textbf{spazio degli indirizzi}, in particolare si sceglie se il figlio crea una copia identica della memoria utilizzata dal genitore oppure se carica un programma completamente nuovo.
 
 Vediamo ora un esempio di creazione di un processo in \texttt{UNIX} (figura \ref{fig:fork}). Questo sistema operativo fornisce tre particolari \textit{system calls}:
@@ -100,7 +100,7 @@ Vediamo ora un esempio di creazione di un processo in \texttt{UNIX} (figura \ref
 
 
 %
-\subsubsection{L'albero dei processi in Linux}
+\subsection{L'albero dei processi in Linux}
 Come fa il sistema operativo a generare tutti i processi di cui ha bisogno? Ci deve sempre essere un processo iniziale, un programma all'inizio da cui tutti si genera. In particolare in Linux il primo processo da cui tutto è generato è chiamato \texttt{systemd} ed è il processo padre di tutti gli altri processi, quello il quale \texttt{pid} vale 1. Da \texttt{systemd}, \textit{forkando} processo dopo processo vengono generati tutti i processi necessari all'avvio del sistema, come il terminale, generando quindi un albero (figura \ref{fig:three_of_processes}).
 
 \begin{figure}[h]
@@ -111,17 +111,17 @@ Come fa il sistema operativo a generare tutti i processi di cui ha bisogno? Ci d
 \end{figure}
 
 % 
-\subsubsection{Terminazione di un processo}
+\subsection{Terminazione di un processo}
 Naturalmente, un processo può anche terminare. La terminazione del processo può essere spontanea (attraverso la \textit{system call} \texttt{exit}) e quindi il processo viene deallocato dal sistema operativo, oppure il processo può essere terminato dal genitore attraverso la system call \texttt{abort}. Questo di solito avviene quando il processo figlio supera il limite delle risorse allocate, quando la task che sta completando non è più richiesta oppure nel momento in cui il genitore termina e di conseguenza il sistema operativo termina anche i figli.
 
 Come abbiamo visto in precedenza, esiste una funzione (\texttt{wait()}), che serve per evitare che il processo parent termini prima del processo child: la funzione infatti obbliga il parent ad aspettare che il child termini. Inoltre, se al termine di un processo child non c'è nessun processo parent che stava aspettando il termine del child, ci troviamo davanti ad un \textbf{processo zombie}. Infine, se il processo parent termina senza aspettare la terminazione del child, quest'ultimo è chiamato \textbf{orfano} e verrà terminato dal sistema operativo.
 
 % 
-\subsection{Comunicazione tra processi (IPC)}\label{IPC}
+\section{Comunicazione tra processi (IPC)}\label{IPC}
 Passiamo ora a discutere i diversi modi per comunicare tra diversi processi. In alcuni casi avremo a che fare con processi indipendenti, altre volte invece necessiteremo di processi \textbf{cooperanti}. Per questi ultimi è necessario un modello di \textit{Inter-Process Communication}, chiamata anche \textbf{IPC}. In questo paragrafo ci occuperemo di due modelli: comunicazione tramite memoria condivisa e tramite il passaggio di messaggi.
 
 % 
-\subsubsection{Memoria condivisa}
+\subsection{Memoria condivisa}
 Il primo modello di cui ci occuperemo è la tecnica di memoria condivisa. In questo modello, come possiamo notare anche dalla figura \ref{fig:shared_memory}, l'unica cosa di cui si fa carico il sistema operativo è l'assegnazione di una memoria che è condivisa tra i processi A e B.
 \begin{figure}[h]
     \centering
@@ -140,7 +140,7 @@ Partiamo ora da un esempio di questo modello al fine di ottenere informazioni pi
 \end{itemize}
 
 % 
-\subsubsection{Passaggio di messaggi}
+\subsection{Passaggio di messaggi}
 In questo secondo caso invece il sistema operativo si prende carico di gestire la coda dei messaggi (\textbf{message queue}) che vengono scambiati tra i due processi (figura \ref{fig:message_passing}). In questo caso è il kernel che fa da intermediario tra i due e di conseguenza la velocità di comunicazione sarà ridotta dall'\textbf{overhead}.
 \begin{figure}[h]
     \centering
