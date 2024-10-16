@@ -1,0 +1,52 @@
+\begin{titlepage}
+    \pagestyle{empty}
+    
+    % Background color
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[MainColor] (current page.south west) rectangle (current page.north east);
+        
+        % Background Hexagon
+        \begin{scope}
+            \foreach \i in {2.5,...,22} {
+                \node[rounded corners, MainColor!90, draw, regular polygon, regular polygon sides=6, minimum size=\i cm, ultra thick] at ($(current page.west)+(2.5,-5)$) {};
+            }
+        \end{scope}
+        
+        \foreach \i in {0.5,...,22} {
+            \node[rounded corners, MainColor!90, draw, regular polygon, regular polygon sides=6, minimum size=\i cm, ultra thick] at ($(current page.north west)+(2.5,0)$) {};
+        }
+        
+        \foreach \i in {0.5,...,22} {
+            \node[rounded corners, MainColor!98, draw, regular polygon, regular polygon sides=6, minimum size=\i cm, ultra thick] at ($(current page.north east)+(0,-9.5)$) {};
+        }
+        
+        \foreach \i in {21,...,6} {
+            \node[MainColor!95, rounded corners, draw, regular polygon, regular polygon sides=6, minimum size=\i cm, ultra thick] at ($(current page.south east)+(-0.2,-0.45)$) {};
+        }
+        
+        % Title of the Report
+        \node[left, MainColor!5, minimum width=0.625*\paperwidth, minimum height=3cm, rounded corners] at ($(current page.north east)+(0,-9.5)$) {
+            {\fontsize{35}{30} \selectfont \bfseries Sistemi Operativi}
+        };
+        
+        % Author Name
+        \node[left, MainColor!5, minimum width=0.625*\paperwidth, minimum height=2cm, rounded corners] at ($(current page.north east)+(0,-11)$) {
+            {\Large \textsc{\href{https://github.com/imAlessas}{Alessandro Trigolo}}}
+        };
+
+        % Subtitle 
+        \node[left, MainColor!10, minimum width=0.625*\paperwidth, minimum height=2cm, rounded corners] at ($(current page.north east)+(0,-13.5)$) {
+            {\large \textit{Università degli Studi di Padova}}
+        };
+        
+        % Year 
+        \node[left, MainColor!10, minimum width=0.625*\paperwidth, minimum height=2cm, rounded corners] at ($(current page.north east)+(0,-14.5)$) {
+            {2022 — 2023}
+        };
+
+    \end{tikzpicture}
+
+    % Add vertical space to improve layout
+    \vspace*{1cm}  % Adjust spacing as needed
+
+\end{titlepage}
