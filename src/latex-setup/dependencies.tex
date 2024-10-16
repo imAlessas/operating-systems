@@ -1,48 +1,68 @@
+% Input encoding for Unicode characters (UTF-8) 
 \usepackage[utf8]{inputenc}
+
+% Language settings for Italian (e.g., hyphenation, date formatting)
 \usepackage[italian]{babel}
-\usepackage[pdftitle={sistemi-operativi}, pdfauthor={imAlessas}, pdfdisplaydoctitle]{hyperref}
 
-\usepackage{graphicx}   
-\usepackage{geometry}    % paper sheet size
-\usepackage{enumitem}
-\usepackage{todonotes}
-\usepackage{comment}
-\usepackage{blindtext}    % lorem ipsum
-\usepackage{amsmath}      % equation
-\usepackage{listings}     % code snippets
-\usepackage{color}        % colors
-\usepackage{pxfonts}      % bold keywords
-\usepackage{tabularx}     % fixed columns
-\usepackage{wrapfig}      % wrap figure in the text
+% Hyperlinks in PDF with metadata for title and author
+\usepackage[%
+    pdftitle={sistemi-operativi}, % PDF document title
+    pdfauthor={imAlessas},        % PDF document author
+    pdfdisplaydoctitle            % Display document title in the PDF viewer
+]{hyperref}
 
-\usepackage{array}        % List of Figures
-\usepackage{tikz}
-\usepackage[dvipsnames]{xcolor}
+% Change the Font Family
 \usepackage{lmodern}
-\usepackage[all]{xy}
 
-\usepackage{amssymb}
-\usepackage{amsthm}
-\usepackage{amscd}
-\usepackage{amsfonts}
-\usepackage{mathrsfs}
-\usepackage{mathtools}
-\usepackage{mathabx}
+% Handling of external images in the document
+\usepackage{graphicx}
 
-\usepackage{pst-node}
-\usepackage{tikz-cd}
-\usepackage{forest}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{float}
+% Customizable page layout, used to define paper size, margins, etc.
+\usepackage{geometry}
+
+% Enhanced itemize and enumerate lists (e.g., custom labels, spacing)
+\usepackage{enumitem}
+
+% For adding colored, customizable TODO notes in the margin
+\usepackage{todonotes}
+
+% Allows to comment out large blocks of text
+\usepackage{comment}
+
+% For generating placeholder text (e.g., Lorem ipsum)
+\usepackage{blindtext}
+
+% Enhanced math features, including equations and mathematical symbols
+\usepackage{amsmath}
+
+% Syntax highlighting and formatting for source code snippets
+\usepackage{listings}
+
+% Provides additional colors (used by other packages such as listings)
+\usepackage{color}
+
+% Font package, provides bold typefaces for keywords and text in general
+\usepackage{pxfonts}
+
+% Allows fixed-width columns in tables (useful for table alignment)
+\usepackage{tabularx}
+
+% Wrap figures within the text, allowing text to flow around images
+\usepackage{wrapfig}
+
+% For advanced table formatting, used for structured tables or List of Figures
+\usepackage{array}
+
+% Create diagrams and vector graphics directly within LaTeX
+\usepackage{tikz}
 \usetikzlibrary{shadows,shapes.geometric,calc}
 
-\usepackage{times}
-\usepackage[most]{tcolorbox}
-\usepackage{titletoc}
-\usepackage{moresize}
-\usepackage{anyfontsize}
-
-\usepackage{erewhon}
+% Load the titlesec package for custom section formatting
 \usepackage{titlesec}
-\usepackage{epigraph}
+
+% Custom Headers and Footers
+\usepackage{fancyhdr}
+
+% Table of Content customization
+\usepackage{tocloft}
+
